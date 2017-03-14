@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TrainingCenterDatabase>
+<Activities>
+  <Activity Sport="Running">
+    <Creator>Timex Run X20 IRONMAN</Creator>
+    <Id>2016-12-31T21:00:00Z</Id>
+    <Lap StartTime="2016-12-31T21:00:00Z">
+      <TotalTimeSeconds>3519.0</TotalTimeSeconds>
+      <DistanceMeters>1200</DistanceMeters>
+      <Calories>640</Calories>
+      <Intensity>Active</Intensity>
+      <TriggerMethod>Manual</TriggerMethod>
+      <Track>
+      </Track>
+    </Lap>
+  </Activity>
+</Activities>
+</TrainingCenterDatabase>
