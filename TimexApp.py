@@ -21,6 +21,7 @@ fechaatributo = documento.find("Activities/Activity")
 fechaatributo[2].set("StartTime",fecha.strftime('%Y-%m-%dT%H:%M:%SZ'))
 
 
+
 #Vamos a buscar la distancia total y vamos a sustituirla
 print "Ingrese la Distancia Total metros"
 metrostotales = input()
@@ -44,6 +45,8 @@ caloriastotalesbase.text=str(caloriastotales)
 mapa = etree.parse('Mapa.tcx')
 
 
+
+
 trackpoint = mapa.findall("Courses/Course/Track/Trackpoint")
 Laps = input("No de Laps  ")
 ContadorLaps=1
@@ -57,6 +60,7 @@ metrosdif=0.0
 tiempometros=0.0
 tiempoquefalto=0
 segundosgenerales=0
+distanciasumada=0;
 
 ListaTracks = []
 
@@ -72,12 +76,15 @@ for TracksPoints in trackpoint:
     Track = documento.find("Activities/Activity/Lap/Track")
     DistanciaMapa = float(TracksPoints.find('DistanceMeters').text)
 
+    
+
+
     # Se va a pedir la informacion del cada Lap
 
 
-    if DistanciaMapa<=(Distancia):
+    if DistanciaMapa<=(Distancia+15):
         ListaTracks.append(TracksPoints)
-        metrosact=DistanciaMapa - ((ContadorLaps-1)*1000)
+        metrosact=Distancia
         #print (len(ListaTracks))
     else:
         #Ingresamos el Tiempo del Lap terminado
@@ -85,20 +92,25 @@ for TracksPoints in trackpoint:
         minutosingresado = raw_input('Ingrese el tiempo del Lap' + str(ContadorLaps) +  ' en HH:mm:ss    ')
         minutos = datetime.strptime(minutosingresado, '%H:%M:%S')
         #Ya con este tiempo, se va a tener fraccion, por cada TracPoints
-        fraccion = (int(minutos.strftime('%M'))*60 + int(minutos.strftime('%S')))/float(len(ListaTracks))
+        #fraccion = (int(minutos.strftime('%M'))*60 + int(minutos.strftime('%S')))/float(len(ListaTracks))
         #print fraccion
         #print (fraccion)
 
         #Primero se calcula los metros totales, para saber el total en segundos por metro
         #tiempometros=(int(minutos.strftime('%M'))*60 + int(minutos.strftime('%S')))/float(metrosact)
-        tiempometros=(int(minutos.strftime('%M'))*60 + int(minutos.strftime('%S')))/float(Distancia - ((ContadorLaps-1)*1000))
+        if(distanciasumada==0):
+            tiempometros=(int(minutos.strftime('%M'))*60 + int(minutos.strftime('%S')))/float(Distancia)
+        else:
+            tiempometros=(int(minutos.strftime('%M'))*60 + int(minutos.strftime('%S')))/float(Distancia  - distanciasumada)
+
 
         contLista=0;
 
         if(ContadorLaps==1):
             metrosant=0;
         else:
-            metrosant= Distancia - ((Distancia-((ContadorLaps-1)*1000)))
+            metrosant= Distancia  - (Distancia - distanciasumada)
+
 
         segundosgenerales=0
 
@@ -108,6 +120,9 @@ for TracksPoints in trackpoint:
 
             fechanueva = Lista.find("Time")
             metrosdif = metrosact - metrosant
+
+         
+
             #Se incrementa Fecha para poder aumentar tiempo
             FechaTrackPoint = FechaTrackPoint + timedelta(seconds=((metrosdif*tiempometros)+tiempoquefalto))
 
@@ -125,6 +140,7 @@ for TracksPoints in trackpoint:
             contLista=contLista+1
             tiempoquefalto=0;
 
+        distanciasumada = Distancia
 
         tiempoquefalto=(int(minutos.strftime('%M'))*60 + int(minutos.strftime('%S'))) - segundosgenerales
 
